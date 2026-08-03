@@ -1,0 +1,33 @@
+name: ${COMPOSE_PROJECT_NAME:-security-assessment}
+
+include:
+  - services/wazuh/compose.yml
+  - services/osquery/compose.yml
+  - services/suricata/compose.yml
+  - services/shuffle/compose.yml
+  - services/demo/compose.yml
+
+networks:
+  security_net:
+    name: security-assessment-net
+    driver: bridge
+    internal: false
+
+volumes:
+  wazuh_api_config:
+  wazuh_etc:
+  wazuh_logs:
+  wazuh_queue:
+  wazuh_var_multigroups:
+  wazuh_integrations:
+  wazuh_active_response:
+  wazuh_agentless:
+  wazuh_wodles:
+  filebeat_etc:
+  filebeat_var:
+  wazuh_indexer_data:
+  wazuh_dashboard_config:
+  wazuh_dashboard_custom:
+  wazuh_agent_data:
+  shuffle_opensearch_data:
+

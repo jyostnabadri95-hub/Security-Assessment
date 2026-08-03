@@ -1,0 +1,12 @@
+services:
+  osquery:
+    image: osquery/osquery:5.17.0-ubuntu24.04
+    hostname: osquery
+    restart: unless-stopped
+    command: ['osqueryd', '--config_path=/etc/osquery/osquery.conf', '--logger_plugin=filesystem', '--logger_path=/var/log/osquery', '--disable_events=false']
+    networks: [security_net]
+    privileged: true
+    volumes:
+      - ./config/osquery.conf:/etc/osquery/osquery.conf:ro
+      - ../demo/logs:/var/log/osquery
+      - /dev:/host/dev:ro

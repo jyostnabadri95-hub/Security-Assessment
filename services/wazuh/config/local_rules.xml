@@ -1,0 +1,29 @@
+<group name="local,osquery,suricata,">
+  <rule id="100100" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="name">^usb_inventory_linux$</field>
+    <description>osquery detected a USB inventory change</description>
+    <group>usb,inventory,</group>
+  </rule>
+  <rule id="100101" level="10">
+    <if_sid>100100</if_sid>
+    <match>"action":"added"</match>
+    <field name="columns.removable">^1$</field>
+    <description>Unauthorized removable USB device inserted: $(columns.vendor) $(columns.model), serial $(columns.serial)</description>
+    <mitre><id>T1052.001</id></mitre>
+    <group>usb,dlp,incident,shuffle,</group>
+  </rule>
+  <rule id="100110" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="event_type">^alert$</field>
+    <description>Suricata IDS event: $(alert.signature)</description>
+    <group>suricata,ids,</group>
+  </rule>
+  <rule id="100111" level="12">
+    <if_sid>100110</if_sid>
+    <field name="alert.signature_id">^100000[12]$</field>
+    <description>Suricata detected a malicious URL demo signature: $(alert.signature)</description>
+    <mitre><id>T1071.001</id></mitre>
+    <group>suricata,urlhaus,incident,shuffle,</group>
+  </rule>
+</group>

@@ -1,0 +1,80 @@
+services:
+  shuffle-opensearch:
+    image: opensearchproject/opensearch:2.19.1
+    hostname: shuffle-opensearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: 'true'
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${SHUFFLE_OPENSEARCH_PASSWORD}
+      plugins.security.disabled: 'true'
+    expose: ['9200']
+    networks: [security_net]
+    ulimits:
+      memlock: {soft: -1, hard: -1}
+    volumes:
+      - shuffle_opensearch_data:/usr/share/opensearch/data
+
+  shuffle-backend:
+    image: ghcr.io/shuffle/shuffle-backend:${SHUFFLE_VERSION:-2.0.2}
+    hostname: shuffle-backend
+    restart: unless-stopped
+    environment:
+      SHUFFLE_OPENSEARCH_URL: http://shuffle-opensearch:9200
+      SHUFFLE_OPENSEARCH_USERNAME: admin
+      SHUFFLE_OPENSEARCH_PASSWORD: ${SHUFFLE_OPENSEARCH_PASSWORD}
+      SHUFFLE_OPENSEARCH_SKIPSSL_VERIFY: 'true'
+      SHUFFLE_ENCRYPTION_MODIFIER: ${SHUFFLE_ENCRYPTION_MODIFIER}
+      BASE_URL: http://shuffle-backend:5001
+      OUTER_HOSTNAME: shuffle-backend
+      TZ: ${TZ:-Asia/Kolkata}
+    expose: ['5001']
+    networks: [security_net]
+    depends_on: [shuffle-opensearch]
+    volumes:
+      - ./apps:/shuffle-apps
+      - ./files:/shuffle-files
+
+  shuffle-frontend:
+    image: ghcr.io/shuffle/shuffle-frontend:${SHUFFLE_VERSION:-2.0.2}
+    hostname: shuffle-frontend
+    restart: unless-stopped
+    environment:
+      BACKEND_HOSTNAME: shuffle-backend
+    ports:
+      - 127.0.0.1:${SHUFFLE_UI_PORT:-3001}:80
+    networks: [security_net]
+    depends_on: [shuffle-backend]
+
+  shuffle-orborus:
+    image: ghcr.io/shuffle/shuffle-orborus:${SHUFFLE_VERSION:-2.0.2}
+    hostname: shuffle-orborus
+    restart: unless-stopped
+    environment:
+      BASE_URL: http://shuffle-backend:5001
+      ENVIRONMENT_NAME: Shuffle
+      ORG_ID: Shuffle
+      DOCKER_API_VERSION: '1.44'
+      SHUFFLE_APP_SDK_TIMEOUT: '300'
+      SHUFFLE_ORBORUS_EXECUTION_CONCURRENCY: '5'
+      TZ: ${TZ:-Asia/Kolkata}
+    networks: [security_net]
+    depends_on: [shuffle-backend]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  shuffle-alert-forwarder:
+    image: python:3.13-alpine
+    hostname: shuffle-alert-forwarder
+    restart: unless-stopped
+    command: ['python', '/app/forwarder.py']
+    environment:
+      SHUFFLE_WEBHOOK_URL: ${SHUFFLE_WEBHOOK_URL:-}
+      ALERT_FILE: /var/ossec/logs/alerts/alerts.json
+      RULE_IDS: 100101,100111
+    networks: [security_net]
+    depends_on: [shuffle-backend, wazuh.manager]
+    volumes:
+      - ./forwarder.py:/app/forwarder.py:ro
+      - wazuh_logs:/var/ossec/logs:ro
