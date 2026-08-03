@@ -6,3 +6,5 @@
 08/03/2026-13:00:54.732372  [**] [1:1000002:1] DEMO URLhaus IOC match [**] [Classification: A Network Trojan was detected] [Priority: 1] {TCP} 172.20.0.6:56930 -> 172.20.0.4:80
 08/03/2026-13:11:44.667640  [**] [1:1000001:1] DEMO Malicious URL access [**] [Classification: A Network Trojan was detected] [Priority: 1] {TCP} 172.20.0.4:36714 -> 172.20.0.2:80
 08/03/2026-13:11:44.667640  [**] [1:1000002:1] DEMO URLhaus IOC match [**] [Classification: A Network Trojan was detected] [Priority: 1] {TCP} 172.20.0.4:36714 -> 172.20.0.2:80
+08/03/2026-16:35:27.133019  [**] [1:1000001:1] DEMO Malicious URL access [**] [Classification: A Network Trojan was detected] [Priority: 1] {TCP} 172.19.0.7:58842 -> 172.19.0.2:80
+08/03/2026-16:35:27.133019  [**] [1:1000002:1] DEMO URLhaus IOC match [**] [Classification: A Network Trojan was detected] [Priority: 1] {TCP} 172.19.0.7:58842 -> 172.19.0.2:80
