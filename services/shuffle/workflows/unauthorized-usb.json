@@ -1,0 +1,12 @@
+{
+  "name": "Unauthorized USB Device",
+  "description": "Wazuh/osquery alert -> incident ticket -> email notification",
+  "trigger": {"type": "webhook", "expected_rule_id": "100101"},
+  "steps": [
+    {"name": "Normalize Wazuh alert", "action": "parse_json"},
+    {"name": "Check device allowlist", "action": "compare_vendor_serial"},
+    {"name": "Create incident", "action": "ticket", "target": "configure-in-shuffle"},
+    {"name": "Notify security", "action": "email", "target": "configure-in-shuffle"}
+  ]
+}
+

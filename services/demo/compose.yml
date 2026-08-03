@@ -1,0 +1,12 @@
+services:
+  demo-web:
+    image: nginx:1.27-alpine
+    hostname: urlhaus-demo.local
+    restart: unless-stopped
+    expose: ['80']
+    networks:
+      security_net:
+        aliases: [urlhaus-demo.local]
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+

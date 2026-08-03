@@ -1,0 +1,12 @@
+{
+  "name": "Malicious URL Detection",
+  "description": "Suricata alert -> URLhaus enrichment -> incident -> email",
+  "trigger": {"type": "webhook", "expected_signature_id": 1000001},
+  "steps": [
+    {"name": "Extract URL and host", "action": "parse_suricata_eve"},
+    {"name": "URLhaus lookup", "action": "http", "target": "https://urlhaus-api.abuse.ch/v1/url/"},
+    {"name": "Create incident", "action": "ticket", "target": "configure-in-shuffle"},
+    {"name": "Notify security", "action": "email", "target": "configure-in-shuffle"}
+  ]
+}
+

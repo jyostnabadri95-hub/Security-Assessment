@@ -1,0 +1,29 @@
+[1 - Suricata-Main] 2026-08-03 12:57:15 Notice: suricata: This is Suricata version 7.0.10 RELEASE running in SYSTEM mode
+[1 - Suricata-Main] 2026-08-03 12:57:15 Warning: runmodes: No output module named eve-log.fileinfo
+[1 - Suricata-Main] 2026-08-03 12:57:15 Warning: counters: stats are enabled but no loggers are active
+[1 - Suricata-Main] 2026-08-03 12:57:15 Warning: detect-http-host: rule 1000002: http.host keyword specified along with "nocase". The hostname buffer is normalized to lowercase, specifying nocase is redundant.
+[1 - Suricata-Main] 2026-08-03 12:57:15 Error: detect: error parsing signature "alert http any any -> any any (msg:"DEMO URLhaus IOC match"; flow:established,to_server; http.host; content:"urlhaus-demo.local"; nocase; sid:1000002; rev:1; classtype:trojan-activity;)" from file /var/lib/suricata/rules/local.rules at line 2
+[1 - Suricata-Main] 2026-08-03 12:57:15 Warning: af-packet: eth0: AF_PACKET tpacket-v3 is recommended for non-inline operation
+[1 - Suricata-Main] 2026-08-03 12:57:16 Notice: threads: Threads created -> W: 10 FM: 1 FR: 1   Engine started.
+[1 - Suricata-Main] 2026-08-03 12:58:11 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2026-08-03 12:58:12 Notice: device: eth0: packets: 8, drops: 0 (0.00%), invalid chksum: 0
+[1 - Suricata-Main] 2026-08-03 12:58:13 Notice: suricata: This is Suricata version 7.0.10 RELEASE running in SYSTEM mode
+[1 - Suricata-Main] 2026-08-03 12:58:13 Warning: counters: stats are enabled but no loggers are active
+[1 - Suricata-Main] 2026-08-03 12:58:13 Warning: af-packet: eth0: AF_PACKET tpacket-v3 is recommended for non-inline operation
+[1 - Suricata-Main] 2026-08-03 12:58:14 Notice: threads: Threads created -> W: 10 FM: 1 FR: 1   Engine started.
+[1 - Suricata-Main] 2026-08-03 12:59:09 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2026-08-03 12:59:09 Notice: device: eth0: packets: 36, drops: 0 (0.00%), invalid chksum: 0
+[1 - Suricata-Main] 2026-08-03 13:00:44 Notice: suricata: This is Suricata version 7.0.10 RELEASE running in SYSTEM mode
+[1 - Suricata-Main] 2026-08-03 13:00:44 Warning: counters: stats are enabled but no loggers are active
+[1 - Suricata-Main] 2026-08-03 13:00:44 Warning: af-packet: eth0: AF_PACKET tpacket-v3 is recommended for non-inline operation
+[1 - Suricata-Main] 2026-08-03 13:00:45 Notice: threads: Threads created -> W: 10 FM: 1 FR: 1   Engine started.
+[1 - Suricata-Main] 2026-08-03 13:10:35 Notice: suricata: Signal Received.  Stopping engine.
+[1 - Suricata-Main] 2026-08-03 13:10:36 Notice: device: eth0: packets: 65, drops: 0 (0.00%), invalid chksum: 0
+[1 - Suricata-Main] 2026-08-03 13:11:30 Notice: suricata: This is Suricata version 7.0.10 RELEASE running in SYSTEM mode
+[1 - Suricata-Main] 2026-08-03 13:11:31 Warning: counters: stats are enabled but no loggers are active
+[1 - Suricata-Main] 2026-08-03 13:11:31 Warning: af-packet: eth0: AF_PACKET tpacket-v3 is recommended for non-inline operation
+[1 - Suricata-Main] 2026-08-03 13:11:31 Notice: threads: Threads created -> W: 10 FM: 1 FR: 1   Engine started.
+[1 - Suricata-Main] 2026-08-03 15:44:41 Notice: suricata: This is Suricata version 7.0.10 RELEASE running in SYSTEM mode
+[1 - Suricata-Main] 2026-08-03 15:44:41 Warning: counters: stats are enabled but no loggers are active
+[1 - Suricata-Main] 2026-08-03 15:44:41 Warning: af-packet: eth0: AF_PACKET tpacket-v3 is recommended for non-inline operation
+[1 - Suricata-Main] 2026-08-03 15:44:41 Notice: threads: Threads created -> W: 5 FM: 1 FR: 1   Engine started.

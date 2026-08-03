@@ -1,0 +1,14 @@
+.env
+__pycache__/
+*.pyc
+tmp/
+services/wazuh/config/certs/*.pem
+services/wazuh/config/certs/*.key
+services/wazuh/config/certs/*.crt
+services/shuffle/data/
+services/shuffle/apps/
+services/shuffle/files/
+services/demo/data/finance/*
+services/demo/data/hr/*
+services/demo/data/confidential/*
+!services/demo/data/**/.gitkeep

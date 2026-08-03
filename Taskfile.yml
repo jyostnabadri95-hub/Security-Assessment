@@ -1,0 +1,94 @@
+version: '3'
+
+dotenv: ['.env']
+
+vars:
+  COMPOSE: docker compose --env-file .env
+
+tasks:
+  init:
+    desc: Create local configuration, state directories, and Wazuh certificates
+    cmds:
+      - test -f .env || cp .env.example .env
+      - mkdir -p services/wazuh/config/certs services/shuffle/data services/shuffle/apps services/shuffle/files services/demo/logs services/demo/data/finance services/demo/data/hr services/demo/data/confidential
+      - touch services/demo/data/finance/.gitkeep services/demo/data/hr/.gitkeep services/demo/data/confidential/.gitkeep
+      - |
+        if [ ! -f services/wazuh/config/certs/root-ca.pem ]; then
+          docker compose --env-file .env -f services/wazuh/certs.compose.yml run --rm generator
+        fi
+
+  check:
+    desc: Check prerequisites and render the Compose model
+    deps: [init]
+    cmds:
+      - docker version
+      - docker compose version
+      - '{{.COMPOSE}} config --quiet'
+      - |
+        value=$(docker run --rm alpine:3.20 sysctl -n vm.max_map_count 2>/dev/null || true)
+        test -z "$value" || test "$value" -ge 262144 || { echo "vm.max_map_count must be >= 262144 (is $value)"; exit 1; }
+
+  pull:
+    desc: Pull pinned service images
+    deps: [init]
+    cmds:
+      - '{{.COMPOSE}} pull'
+
+  up:
+    desc: Start the complete local security platform
+    deps: [check]
+    cmds:
+      - '{{.COMPOSE}} up -d --remove-orphans'
+      - task: status
+
+  down:
+    desc: Stop containers while preserving evidence and indexes
+    cmds:
+      - '{{.COMPOSE}} down'
+
+  reset:
+    desc: Remove containers and named volumes (demo evidence is lost)
+    prompt: This removes all indexed demo data. Continue?
+    cmds:
+      - '{{.COMPOSE}} down --volumes --remove-orphans'
+
+  status:
+    desc: Show container health and local URLs
+    cmds:
+      - '{{.COMPOSE}} ps'
+      - echo "Wazuh Dashboard https://localhost:${WAZUH_DASHBOARD_PORT:-8443} (admin / password from .env)"
+      - echo "Shuffle UI http://localhost:${SHUFFLE_UI_PORT:-3001} (local loopback only)"
+
+  logs:
+    desc: Follow all service logs
+    cmds:
+      - '{{.COMPOSE}} logs -f --tail=100'
+
+  demo:fim:
+    desc: Generate create, modify, and delete FIM events
+    cmds:
+      - ./scripts/demo-fim.sh
+
+  demo:usb:
+    desc: Generate an unauthorized USB osquery result
+    cmds:
+      - ./scripts/demo-usb.sh
+
+  demo:url:
+    desc: Generate a harmless Suricata malicious-URL signature hit
+    cmds:
+      - ./scripts/demo-url.sh
+
+  demo:all:
+    desc: Run all safe threat demonstrations
+    cmds:
+      - task: demo:fim
+      - task: demo:usb
+      - task: demo:url
+
+  rules:update:
+    desc: Update Suricata ET Open rules inside the running container
+    cmds:
+      - '{{.COMPOSE}} exec suricata suricata-update'
+      - '{{.COMPOSE}} restart suricata'
+
